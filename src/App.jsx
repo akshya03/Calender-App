@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { getMonth } from './util';
-import { CalenderHeader, Month, Sidebar } from './components';
+import { CalenderHeader, Month } from './components';
 import GlobalContext from './context/GlobalContext';
 import EventModal from './components/EventModal';
 
@@ -20,7 +20,6 @@ function App() {
       <div className="h-screen flex flex-col">
         <CalenderHeader/>
         <div className="flex flex-1">
-          <Sidebar />
           <Month month={currentMonth}/>
         </div>
       </div>
