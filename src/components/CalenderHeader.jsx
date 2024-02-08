@@ -18,11 +18,11 @@ import { Fragment, useContext } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import GlobalContext from '../context/GlobalContext'
+import { getMonth } from '../util'
+import dayjs from 'dayjs'
+import CreateEvent from './CreateEvent'
 
-const navigation = [
-  { name: 'Calender App', href: '#', current: false },
-  { name: 'Today', href: '#', current: false },
-]
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -30,6 +30,10 @@ function classNames(...classes) {
 
 export default function CalenderHeader() {
     const {monthIndex, setMonthIndex} = useContext(GlobalContext);
+    const navigation = [
+      { name: 'Calender App', href: '#', current: false , onClick:()=>{}},
+      { name: 'Today', onClick:()=>{setMonthIndex(dayjs().month())} , current: false },
+    ]
     return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -43,6 +47,7 @@ export default function CalenderHeader() {
                       <a
                         key={item.name}
                         href={item.href}
+                        onClick={item.onClick}
                         className={classNames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
@@ -57,27 +62,19 @@ export default function CalenderHeader() {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                         </svg>
                     </button>
-                    <a className='text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'>
-                        {}
-                    </a>
                     <button onClick={()=>{setMonthIndex(monthIndex+1)}}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                     </svg>
                     </button>
+                    <h2 className='text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'>
+                        {dayjs(new Date(dayjs().year(), monthIndex)).format("MMMM YYYY")}
+                    </h2>
                   </div>
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
-                  type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-
+                <CreateEvent />
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
