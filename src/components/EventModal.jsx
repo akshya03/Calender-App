@@ -1,6 +1,10 @@
 import React, { useContext , useState} from 'react';
 import GlobalContext from '../context/GlobalContext';
 import axios from 'axios';
+import dayjs from 'dayjs';
+// const customParseFormat = require("dayjs/plugin/customParseFormat");
+// import {customParseFormat} from "dayjs/plugin/customParseFormat"
+// dayjs.extend(customParseFormat);
 
 export default function EventModal(){
     const {setShowEventModal, selectedDay, dispatchEvent, selectedEvent, createEditEvent, setSelectedEvent} = useContext(GlobalContext);
@@ -12,6 +16,7 @@ export default function EventModal(){
 
     async function handleSubmit(e){
         e.preventDefault();
+        console.log(selectedDay);
         if(selectedEvent){
             const res = axios({
                 url: "http://localhost:4000/api/v1/updateEvent",
@@ -22,13 +27,13 @@ export default function EventModal(){
                     dateTime: selectedDay.valueOf()
                 }
             });
-            console.log(res.data.event);
+            // console.log(res.data.event);
             const calenderEvent = {
                 eventName:res.data.event.name,
                 eventDescription: res.data.event.description,
                 day: res.data.event.dateTime,
                 file: null,
-                id: selectedEvent? selectedEvent.id: Date.now()
+                id: res.data.event._id
             }
             dispatchEvent({type: 'update', payload: calenderEvent});
         }else{
@@ -42,6 +47,13 @@ export default function EventModal(){
                 }
             });
             console.log(res.data.event);
+            const calenderEvent = {
+                eventName:res.data.event.name,
+                eventDescription: res.data.event.description,
+                day: res.data.event.dateTime,
+                file: null,
+                id: res.data.event._id
+            }
             
             dispatchEvent({type: 'push', payload: calenderEvent});
         }
@@ -94,7 +106,7 @@ export default function EventModal(){
                     <input type="time" id="eventTime" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter event name" required 
                     value={eventTime}
                     name="eventTime"
-                    onChange={(e)=>setEventName(e.target.value)}
+                    onChange={(e)=>setEventTime(e.target.value)}
                     />
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="fileUpload">Upload file</label>
                     <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" 
@@ -122,13 +134,8 @@ export default function EventModal(){
                     // data-hs-overlay="#hs-slide-down-animation-modal"
                     onClick={()=>{
                         const res = axios({
-                            url: "http://localhost:4000/api/v1/saveEvent",
-                            method: "POST",
-                            data:{
-                                name: eventName,
-                                description: eventDescription,
-                                dateTime: selectedDay.valueOf()
-                            }
+                            url: `http://localhost:4000/api/v1/deleteEvent/${selectedEvent.id}`,
+                            method: "GET",
                         });
                         dispatchEvent({type: "delete", payload: selectedEvent});
                         setShowEventModal(false);
