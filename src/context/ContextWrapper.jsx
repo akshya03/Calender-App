@@ -27,6 +27,7 @@ export default function ContextWrapper({children}){
     const [selectedDay, setSelectedDay] = useState(dayjs());
     const [savedEvents, dispatchEvent] = useReducer(savedEventsReducer, [], initEvents);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [createEditEvent, setCreateEditEvent] = useState('Create');
 
     useEffect(()=>{
         localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
@@ -43,7 +44,9 @@ export default function ContextWrapper({children}){
             dispatchEvent,
             savedEvents,
             selectedEvent,
-            setSelectedEvent
+            setSelectedEvent,
+            createEditEvent,
+            setCreateEditEvent
         }}>
             {children}
         </GlobalContext.Provider>

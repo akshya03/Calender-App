@@ -3,8 +3,12 @@ import React, { useContext , useState, useEffect} from 'react';
 import GlobalContext from '../context/GlobalContext';
 
 function Day({day, rowIdx}) {
-    const {setSelectedDay, setShowEventModal, savedEvents, setSelectedEvent} = useContext(GlobalContext);
+    const {setSelectedDay, setShowEventModal, savedEvents, setSelectedEvent, setCreateEditEvent} = useContext(GlobalContext);
     const [dayEvents, setDayEvents] = useState([]);
+
+    function handleClick(){
+
+    }
 
     useEffect(()=>{
         const events = savedEvents.filter((evt)=>dayjs(evt.day).format("DD-MM-YY")===day.format("DD-MM-YY"));
@@ -14,12 +18,14 @@ function Day({day, rowIdx}) {
     // setCurrentDayClass(day.format("DD-MM-YY")===dayjs().format("DD-MM-YY")?'bg-blue-600 text-white rounded-full w-7': "");
 
     return (
-        <div className='border border-gray-200 flex flex-col' 
+        <div className='border border-gray-200 flex flex-col hover:bg-red-50' 
+            // style={{maxHeight: "80vh"}}
             onClick={()=>{
                 // console.log(day.format("DD-MM-YY"));
                 setSelectedDay(day);
-                // if (dayEvents.length==0)
-                    setShowEventModal(true);
+                if (dayEvents.length==0)
+                    setSelectedEvent(null);
+                setShowEventModal(true);
             }}
         >
             <header className='flex flex-col items-center'>
@@ -30,15 +36,17 @@ function Day({day, rowIdx}) {
                     {day.format('DD')}
                 </p>
             </header>
+            <div className='overflow-y-auto flex-1'>
             {dayEvents.map((evt, idx)=>(
-                <div
-                    key={idx}
-                    className='bg-blue-50 truncate'
-                    onClick={()=>setSelectedEvent(evt)}
-                >
-                    {evt.eventName}
+                <div className='bg-blue-50 hover:bg-blue-200 flex-1 truncate' key={idx}    
+                onClick={()=>setSelectedEvent(evt)}>
+                    <span className=''>
+                        {evt.eventName}
+                    </span>
+                    
                 </div>
             ))}
+            </div>
             
         </div>
     )

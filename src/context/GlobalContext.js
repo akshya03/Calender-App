@@ -11,7 +11,9 @@ const GlobalContext = React.createContext({
     dispatchEvent: ({type, payload})=>{},
     savedEvents: [],
     setSelectedEvent: ()=>{},
-    selectedEvent: null
+    selectedEvent: null,
+    createEditEvent: null,
+    setCreateEditEvent: ()=>{}
 
 });
 
